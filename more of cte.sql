@@ -112,3 +112,16 @@ select w.ward_name, c_4.occupied_bed from wards w join c_4 on w.ward_id = c_4.wa
 with c_5 as 
 (select department_id, count(*) as Total_doctors from doctors group by department_id having total_doctors > 10)
 select d.department_name, Total_doctors from departments d join c_5 on d.department_id = c_5.department_id;
+
+-- Level 5
+-- Question 2: Write a CTE to calculate doctor performance (total vs completed appointments).
+with c1 as
+(select doctor_id, count(*) as total_apt from appointments group by doctor_id),
+c2 as (select doctor_id, count(*) as completed_apt from appointments where status = 'completed' group by doctor_id)
+select c1.doctor_id, c1.total_apt, c2.completed_apt from c1 left join c2 on c1.doctor_id = c2.doctor_id;
+
+-- Question 3: Write a CTE to identify high-risk patients (Severe diagnosis + high BP).
+with c1 as
+(select patient_id from medical_records where blood_pressure > 140),
+c2 as (select patient_id from diagnoses where severity = 'Severe')
+select distinct patient_name from c1 join c2 on c1.patient_id = c2.patient_id join patients p on p.patient_id = c1.patient_id;
