@@ -20,3 +20,4 @@ select patient_id, visit_date, blood_pressure from medical_records where blood_p
 
 -- **Question 9:** Write a SELECT query to find all diagnoses with 'Severe' severity AND from February 2024 (diagnosis_date >= '2024-02-01' AND diagnosis_date < '2024-03-01'). Show diagnosis_description, severity, and diagnosis_date
 select diagnosis_description, severity, diagnosis_date from diagnoses where severity = 'Severe' and diagnosis_date between '2024-02-01' and '2024-03-01';
+
