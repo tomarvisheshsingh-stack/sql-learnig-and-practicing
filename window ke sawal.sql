@@ -71,3 +71,24 @@ WHERE rn = 1;
 select distinct doctor_id,
 	max(appointment_date) over (partition by doctor_id) as `last_appointment`
 from appointments;
+
+select * from appointments;
+-- 10. Calculate the percentage of completed appointments for each doctor using window functions.
+select *,
+round(
+	sum(case when status = 'completed' then 1 else 0 end) over
+		(partition by doctor_id) * 100.0
+	/ count(*) over (partition by doctor_id), 2) as completion_percent
+from appointments;
+
+-- 11. Find the top 2 busiest doctors based on appointment count using window ranking functions.
+select doctor_id, total_appointments, rankk from 
+(select doctor_id, count(*) as total_appointments,
+	rank() over (order by count(*) desc) as rankk
+from appointments group by doctor_id) as t where rankk <= 2;
+
+-- 12. Find patients who have more appointments than the average using window functions.
+select patient_id, total_appointments, avg_count from (select patient_id, 
+	count(*) as total_appointments, 
+    avg(count(*)) over () as avg_count from appointments group by patient_id) as t
+where total_appointments > avg_count;
